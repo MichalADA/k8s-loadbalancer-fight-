@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-custom-index
+  namespace: loadbalancer-fight
+
+data:
+  index.html: |
+    <html>
+    <head>
+      <title>Load Balancer Fight</title>
+      <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 20%; }
+        h1 { font-size: 50px; color: #333; }
+      </style>
+    </head>
+    <body>
+      <h1>Pod: $(HOSTNAME)</h1>
+    </body>
+    </html>

@@ -1,0 +1,38 @@
+version: '3'
+tasks:
+  delete-cluster:
+    desc: "Delete the kind cluster"
+    cmds:
+      - kind delete cluster --name kind-kind
+
+  deploy-app:
+    desc: "Deploy the Load Balancer Fight application"
+    cmds:
+      - kubectl apply -f k8s/namespace.yaml
+      - kubectl apply -f k8s/configmap.yaml -n loadbalancer-fight
+      - kubectl apply -f k8s/deployment.yaml -n loadbalancer-fight
+      - kubectl apply -f k8s/service.yaml -n loadbalancer-fight
+      - kubectl get pods -n loadbalancer-fight
+      - kubectl get svc -n loadbalancer-fight
+
+  forward-port:
+    desc: "Forward port to access the service locally"
+    cmds:
+      - kubectl port-forward svc/loadbalancer-fight 8080:80 -n loadbalancer-fight
+
+  fight:
+    desc: "Start the pod elimination script"
+    cmds:
+      - python scripts/fight_script.py
+
+  status:
+    desc: "Show the status of running pods"
+    cmds:
+      - kubectl get pods -o wide -n loadbalancer-fight
+      - kubectl get svc -n loadbalancer-fight
+
+  reset:
+    desc: "Reset the cluster by deleting and redeploying the application"
+    cmds:
+      - task: delete-cluster
+      - task: deploy-app

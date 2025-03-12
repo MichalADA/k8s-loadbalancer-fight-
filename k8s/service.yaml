@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: loadbalancer-fight
+spec:
+  selector:
+    app: loadbalancer-fight
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP

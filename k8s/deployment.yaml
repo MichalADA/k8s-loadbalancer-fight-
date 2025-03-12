@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loadbalancer-fight
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: loadbalancer-fight
+  template:
+    metadata:
+      labels:
+        app: loadbalancer-fight
+    spec:
+      containers:
+      - name: fight-server
+        image: nginx
+        ports:
+        - containerPort: 80
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        volumeMounts:
+        - name: nginx-html
+          mountPath: /usr/share/nginx/html/index.html
+          subPath: index.html
+      volumes:
+      - name: nginx-html
+        configMap:
+          name: nginx-custom-index
